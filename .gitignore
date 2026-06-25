@@ -92,3 +92,8 @@ data/cache/
 !data/raw/.gitkeep
 !data/temp/.gitkeep
 !data/cache/.gitkeep
+
+# ==========================================
+# Data Source
+# ==========================================
+*.csv
