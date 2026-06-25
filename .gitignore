@@ -87,6 +87,7 @@ celerybeat-schedule
 data/raw/
 data/temp/
 data/cache/
+data/scripts/
 
 # Keep sample files
 !data/raw/.gitkeep
