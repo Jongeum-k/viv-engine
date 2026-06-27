@@ -15,7 +15,7 @@ class Settings(BaseSettings):
         extra = "ignore"
 
     @property
-    def db_url(self):
+    def db_url(self) -> str:
         return self.database_url
 
 settings = Settings()
