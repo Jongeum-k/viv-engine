@@ -88,6 +88,7 @@ data/raw/
 data/temp/
 data/cache/
 data/scripts/
+tests/*
 
 # Keep sample files
 !data/raw/.gitkeep

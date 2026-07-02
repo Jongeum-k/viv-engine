@@ -43,3 +43,27 @@ class Word(Base):
         back_populates="word",
         cascade="all, delete-orphan",
     )
+
+    search_results: Mapped[List["WordSearchResult"]] = relationship(
+        "WordSearchResult",
+        back_populates="word",
+        cascade="all, delete-orphan",
+    )
+
+    topic_scores: Mapped[List["WordTopicScore"]] = relationship(
+        "WordTopicScore",
+        back_populates="word",
+        cascade="all, delete-orphan",
+    )
+
+    usage_summaries: Mapped[List["WordUsageSummary"]] = relationship(
+        "WordUsageSummary",
+        back_populates="word",
+        cascade="all, delete-orphan",
+    )
+
+    definitions: Mapped[List["WordDefinition"]] = relationship(
+        "WordDefinition",
+        back_populates="word",
+        cascade="all, delete-orphan",
+    )
