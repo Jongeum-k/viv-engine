@@ -1,5 +1,5 @@
 from sqlalchemy import BigInteger, DateTime, Integer, Text, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
 from datetime import datetime
 
@@ -30,4 +30,10 @@ class PipelineRun(Base):
 
     finished_at: Mapped[Optional[datetime]] = mapped_column(
         DateTime(timezone=True),
+    )
+
+    logs: Mapped[List["PipelineLog"]] = relationship(
+        "PipelineLog",
+        back_populates="pipeline_run",
+        cascade="all, delete-orphan",
     )
