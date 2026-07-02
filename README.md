@@ -20,7 +20,6 @@ This is a [fastapi] project built within python 3.9.
 
 
 Run the server:
-
     # dev
     uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
@@ -30,3 +29,8 @@ Run the server:
     # prod
     echo ENV=prod
     nohup uvicorn app.main:app --host 0.0.0.0 --port 8001
+
+    # Run Celery
+    celery -A app.celery_app.celery_app worker --loglevel=info
+
+    

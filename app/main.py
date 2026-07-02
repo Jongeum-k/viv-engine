@@ -4,6 +4,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.db import get_db
+from app.api.admin_jobs import router as admin_router
 
 app = FastAPI()
 app.add_middleware(
@@ -12,6 +13,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+app.include_router(admin_router)
 
 @app.get("/")
 def read_root():
