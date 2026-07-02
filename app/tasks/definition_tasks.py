@@ -8,7 +8,9 @@ from app.models import Word, WordDefinition
 
 
 DICTIONARY_PROVIDER = "dictionaryapi_dev"
-
+DICTIONARY_RATE_LIMIT = "1/s"
+DICTIONARY_MAX_RETRIES = 5
+DICTIONARY_MAX_RETRIES_SECONDS = 30
 
 def pick_phonetic(payload: List[Dict[str, Any]]) -> Optional[str]:
     if not payload:
@@ -25,6 +27,17 @@ def pick_phonetic(payload: List[Dict[str, Any]]) -> Optional[str]:
 
     return None
 
+def get_retry_countdown(response: httpx.Response, retry_number: int) -> int:
+    retry_after = response.headers.get("Retry-After")
+
+    if retry_after and retry_after.idigit():
+        return int(retry_after)
+
+    return min(
+        DICTIONARY_MAX_RETRIES_SECONDS * (retry_number + 1),
+        300,
+    )
+
 
 def pick_definition_summary(payload: List[Dict[str, Any]]) -> Optional[str]:
     if not payload:
@@ -39,8 +52,13 @@ def pick_definition_summary(payload: List[Dict[str, Any]]) -> Optional[str]:
     return None
 
 
-@celery_app.task(name="tasks.enrich_definition")
-def enrich_definition(word_id: int) -> dict:
+@celery_app.task(
+    name="tasks.enrich_definition",
+    bind=True,
+    max_retries=DICTIONARY_MAX_RETRIES,
+    rate_limit=DICTIONARY_RATE_LIMIT,
+)
+def enrich_definition(self, word_id: int) -> dict:
     db = SessionLocal()
 
     try:
@@ -60,6 +78,36 @@ def enrich_definition(word_id: int) -> dict:
                 "word_id": word_id,
                 "word": word.normalized_lemma,
             }
+
+        if response.status_code == 429:
+            countdown = get_retry_countdown(
+                response=response,
+                retry_number=self.request.retries,
+            )
+
+            raise self.retry(
+                countdown=countdown,
+                exc=httpx.HTTPStatusError(
+                    "Dictionary API rate limit exceeded",
+                    request=response.request,
+                    response=response,
+                ),
+            )
+
+        if response.status_code >= 500:
+            countdown = get_retry_countdown(
+                response=response,
+                retry_number=self.request.retries,
+            )
+
+            raise self.retry(
+                countdown=countdown,
+                exc=httpx.HTTPStatusError(
+                    "Dictionary API temporary server error",
+                    request=response.request,
+                    response=response,
+                ),
+            )
 
         response.raise_for_status()
         payload = response.json()

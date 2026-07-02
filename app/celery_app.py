@@ -20,5 +20,12 @@ celery_app.autodiscover_tasks(
     [
         "app.tasks.frequency_tasks",
         "app.tasks.definition_tasks",
+        "app.tasks.basic_enrichment_tasks",
     ]
 )
+
+celery_app.conf.task_routes = {
+    "tasks.enrich_frequency": {"queue": "frequency"},
+    "tasks.enrich_definition": {"queue": "definition"},
+    "tasks.run_basic_enrichment": {"queue": "control"},
+}

@@ -11,6 +11,8 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 ./scripts/api.sh &
-./scripts/worker.sh &
+./scripts/worker_control.sh &
+./scripts/worker_frequency.sh &
+./scripts/worker_definition.sh &
 
 wait
