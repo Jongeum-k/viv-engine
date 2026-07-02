@@ -1,7 +1,7 @@
 import httpx
 from test_data_parsing import parse_brave_response
 
-API_KEY = "BSA0U9Onpb-hswXQD9A-E1v402xg3VW"
+API_KEY = ""
 
 def api_test(keyword: str):
 
