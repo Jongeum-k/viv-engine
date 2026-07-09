@@ -54,8 +54,6 @@ CREATE TABLE word_topic_scores (
     score NUMERIC(10, 4) NOT NULL DEFAULT 0,
     evidence_count INTEGER NOT NULL DEFAULT 0,
 
-    raw_payload JSONB,
-
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
 
