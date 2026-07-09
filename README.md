@@ -241,15 +241,27 @@ VivEngineProject/
 
 ## Getting Started
 Clone the repository:
-
 ```bash
 git clone https://github.com/Jongeum-k/viv-engine.git
 cd VivEngineProject
-Install dependencies:
-````
+```
 
+Install dependencies:
 ```bash
 uv sync
+```
+
+Set up environment variables and Docker config:
+```bash
+# Create .env and docker-compose.yml from the provided examples
+cp .env.example .env
+cp docker-compose.yml.example docker-compose.yml
+```
+Open `.env` and fill in your credentials (OpenAI API key, Brave Search API key, `DATABASE_URL`, etc.).
+
+Start the development environment:
+```bash
+docker compose up -d
 ```
 
 Make the development scripts executable:
