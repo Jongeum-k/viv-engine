@@ -7,6 +7,7 @@ from app.models import PipelineRun, PipelineLog
 from app.tasks.frequency_tasks import enrich_frequency
 from app.tasks.definition_tasks import enrich_definition
 from app.tasks.basic_enrichment_tasks import run_basic_enrichment as run_basic_enrichment_task
+from app.tasks.research_pipeline_tasks import run_word_research_pipeline, run_research_pipeline_until_done
 
 router = APIRouter(prefix="/admin", tags=["admin-jobs"])
 
@@ -91,6 +92,29 @@ def get_pipeline_run(run_id: int, db: Session = Depends(get_db)):
         "finished_at": run.finished_at,
     }
 
+@router.post("/research/pipeline/run-all")
+def start_full_research_pipeline(
+        batch_size: int = 100,
+        db: Session = Depends(get_db),
+):
+    run = PipelineRun(
+        job_name="research_pipeline_full",
+        status="created",
+        source_name="admin_api",
+    )
+
+    db.add(run)
+    db.commit()
+    db.refresh(run)
+
+    task = run_research_pipeline_until_done.delay(run.id, batch_size)
+
+    return {
+        "status": "queued",
+        "pipeline_run_id": run.id,
+        "task_id": task.id,
+        "batch_size": batch_size,
+    }
 
 @router.get("/pipeline/runs/{run_id}/logs")
 def get_pipeline_logs(run_id: int, db: Session = Depends(get_db)):
@@ -112,3 +136,13 @@ def get_pipeline_logs(run_id: int, db: Session = Depends(get_db)):
         }
         for log in logs
     ]
+
+@router.post("/work/test/{word_id}")
+def research_word(word_id: int):
+    task = run_word_research_pipeline.delay(word_id)
+
+    return {
+        "status": "queued",
+        "word_id": word_id,
+        "task_id": task.id,
+    }

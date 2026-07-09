@@ -14,5 +14,7 @@ trap cleanup EXIT INT TERM
 ./scripts/worker_control.sh &
 ./scripts/worker_frequency.sh &
 ./scripts/worker_definition.sh &
+./scripts/worker_ai.sh &
+./scripts/worker_search.sh &
 
 wait

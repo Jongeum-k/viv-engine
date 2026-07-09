@@ -21,6 +21,10 @@ celery_app.autodiscover_tasks(
         "app.tasks.frequency_tasks",
         "app.tasks.definition_tasks",
         "app.tasks.basic_enrichment_tasks",
+        "app.tasks.research_tasks",
+        "app.tasks.ai_topic_tasks",
+        "app.tasks.usage_summary_tasks",
+        "app.tasks.research_pipeline_tasks",
     ]
 )
 
@@ -28,4 +32,11 @@ celery_app.conf.task_routes = {
     "tasks.enrich_frequency": {"queue": "frequency"},
     "tasks.enrich_definition": {"queue": "definition"},
     "tasks.run_basic_enrichment": {"queue": "control"},
+
+    "tasks.research_word": {"queue": "search"},
+    "tasks.classify_word_topics": {"queue": "ai"},
+    "tasks.summarize_word_usage": {"queue": "ai"},
+    "tasks.run_word_research_pipeline": {"queue": "control"},
+    "tasks.run_research_pipeline": {"queue": "control"},
+    "tasks.run_research_pipeline_until_done": {"queue": "control"},
 }

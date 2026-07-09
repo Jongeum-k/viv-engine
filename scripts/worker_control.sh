@@ -8,4 +8,5 @@ uv run celery \
     --hostname=control@%h \
     --queues=control \
     --concurrency=1 \
+    --pool=solo \
     --loglevel=info

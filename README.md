@@ -20,7 +20,9 @@ This is a [fastapi] project built within python 3.9.
 
 
 Run the server:
-    
+
+    chmod +x scripts/*.sh
     make dev
+
 
     
