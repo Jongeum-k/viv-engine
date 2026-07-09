@@ -14,21 +14,35 @@ This makes VIV useful for learners who want to focus their study time on vocabul
 
 # VIV Engine
 
-<h3 align="center">System Architecture</h2>
+VIV Engine is the backend data platform that powers the VIV vocabulary learning ecosystem.
+
+It is responsible for collecting, enriching, and maintaining vocabulary data used by VIV applications. Through an asynchronous enrichment pipeline, the engine analyzes each word and stores its linguistic and real-world usage information, including:
+
+- Frequency and difficulty scores
+- CEFR level estimation
+- Dictionary definitions and phonetics
+- Real-world search results
+- AI-based topic classification
+- Usage summaries
+
+Rather than serving end users directly, VIV Engine acts as the central source of truth for vocabulary data. Every enrichment task writes its results into PostgreSQL, allowing the pipeline to resume safely after interruptions and enabling other applications to consume a consistent vocabulary dataset.
+
+The VIV ecosystem currently consists of two projects:
+
+- **VIV Engine** — Backend enrichment pipeline, APIs, and vocabulary database *(this repository)*
+- **VIV Dashboard** — React-based administration dashboard for monitoring and controlling enrichment pipelines *(https://github.com/Jongeum-k/viv-dashboard)*
+
+<h3 align="center">System Architecture</h3>
 
 <p align="center">
   <img src="docs/images/architecture.png"
        alt="VIV Engine Architecture"
        width="900">
 </p>
+
 <p align="center">
-<i>Figure 1. Overall architecture of the VIV enrichment engine.</i>
+<i>Figure 1. Overall architecture of the VIV Engine.</i>
 </p>
-
-**VIV** is an AI-powered vocabulary intelligence engine that helps English learners identify which words are truly worth studying.
-
-It analyzes vocabulary through frequency, difficulty, definitions, real-world search results, topic classification, and AI-generated usage summaries. The goal is not just to define a word, but to understand its practical value in real English.
-
 
 ## How VIV Analyzes Words
 
